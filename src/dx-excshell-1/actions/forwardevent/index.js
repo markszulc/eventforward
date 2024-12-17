@@ -1,22 +1,33 @@
 const { Core } = require('@adobe/aio-sdk');
 const { Amplify } = require('aws-amplify');
 const { events } = require('aws-amplify/data');
-const config = require('./amplify_outputs.json');
 const WebSocket = require('ws');
 
 // Polyfill WebSocket in Node.js environment
 global.WebSocket = WebSocket;
 
-Amplify.configure(config);
-
 async function main (params) {
+
   // create a Logger
   const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' });
-  
+
+  //log params
+  //logger.info(`params: ${JSON.stringify(params)}`)
+
+  // connect to the Amplify API
+  Amplify.configure({
+    "API": {
+      "Events": {
+        "endpoint": params.AWS_ENDPOINT,
+        "region": params.AWS_REGION,
+        "defaultAuthMode": params.AWS_DEFAULT_AUTH_MODE,
+        "apiKey": params.AWS_APIKEY
+      }
+    }
+  });
   
   //const eventtype = params.event;
-  await events.post('/default/messages', {aemEvent: params});
-
+  await events.post('/default/messages', {aemEvent: params.data, aemEventType: params.type});
 
   const response = {
     statusCode: 200,

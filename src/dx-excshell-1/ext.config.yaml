@@ -24,7 +24,10 @@ runtimeManifest:
           runtime: nodejs:18
           inputs:
             LOG_LEVEL: debug
-            apiKey: $SERVICE_API_KEY
+            AWS_ENDPOINT: $AWS_ENDPOINT
+            AWS_REGION: $AWS_REGION
+            AWS_DEFAULT_AUTH_MODE: $AWS_DEFAULT_AUTH_MODE
+            AWS_APIKEY: $AWS_APIKEY
           annotations:
             require-adobe-auth: true
             final: true
